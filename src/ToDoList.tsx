@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import styled from "styled-components";
 
 /* function ToDoList(){
     const [todo, setTodo] = useState("");
@@ -27,11 +28,36 @@ import { useForm } from "react-hook-form";
         </form>
     </div>;
 } */
+interface IForm {
+  toDo: string;
+  email: string;
+  name: string;
+  firstName: string;
+  lastName?: string;
+  userName: string;
+  password: string;
+  password1: string;
+}
+const ErrorSpan = styled.span`
+    background-color: #636e72;
+    color:white;
+    // border: 1px solid #e17055;
+`;
 
 function ToDoList() {
-  const { register, handleSubmit, formState } = useForm();
-  const onValid = (data: any) => {};
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    defaultValues: {
+        email: "@gmail.com",
+    }
+  });
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+  console.log(errors);
   return (
     <div>
       <form
@@ -39,33 +65,42 @@ function ToDoList() {
         onSubmit={handleSubmit(onValid)}
       >
         <input {...register("toDo")} placeholder="Write To Do" />
-        <input {...register("email", { required: true })} placeholder="Email" />
         <input
-          {...register("firstName", { required: true })}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Za-z0-9._%+-]+@gmail.com$/,
+              message: "Only gmail.com email allowed",
+            },
+          })}
+          placeholder="Email"
+        /> <ErrorSpan>{errors?.email?.message}</ErrorSpan>
+        <input
+          {...register("firstName", { required: "Enter your firstname" })}
           placeholder="FirstName"
-        />
+        /> <ErrorSpan>{errors?.firstName?.message}</ErrorSpan>
         <input
-          {...register("lastName", { required: true })}
+          {...register("lastName", { required: "Enter your lastName" })}
           placeholder="LastName"
-        />
+        /> <ErrorSpan>{errors?.lastName?.message}</ErrorSpan>
         <input
-          {...register("userName", { required: true, minLength: 5 })}
+          {...register("userName", { required: "Enter your userName", minLength: 5 })}
           placeholder="userName"
-        />
+        /> <ErrorSpan>{errors?.userName?.message}</ErrorSpan>
         <input
           {...register("password", {
             required: "Password is Required",
             minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters",
+              value: 8,
+              message: "Password must be at least 8 characters",
             },
           })}
           placeholder="Password"
-        />
+        /> <ErrorSpan>{errors?.password?.message}</ErrorSpan>
         <input
-          {...register("password1", { required: true })}
+          {...register("password1", { required: "Please check your password" })}
           placeholder="Password1"
-        />
+        /> <ErrorSpan>{errors?.password1?.message}</ErrorSpan>
         <button>Add</button>
       </form>
     </div>
