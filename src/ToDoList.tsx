@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 /* function ToDoList(){
     const [todo, setTodo] = useState("");
@@ -28,23 +28,48 @@ import {useForm} from "react-hook-form";
     </div>;
 } */
 
-function ToDoList(){
-    const {register, watch} = useForm();
-    console.log(register("toDo"));
-    return <div>
-    <form>
-        
-        <input {...register("toDo")} placeholder="Write To Do" />
-        <input {...register("email")} placeholder="Email" />
-        <input {...register("firstName")} placeholder="FirstName" />
-        <input {...register("lastName")} placeholder="LastName" />
-        <input {...register("userName")} placeholder="userName" />
-        <input {...register("password")} placeholder="Password" />
-        <input {...register("password1")} placeholder="Password1" />
-        <button>Add</button>
+function ToDoList() {
+  const { register, handleSubmit, formState } = useForm();
+  const onValid = (data: any) => {};
 
-    </form>
-</div>;
+  return (
+    <div>
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={handleSubmit(onValid)}
+      >
+        <input {...register("toDo")} placeholder="Write To Do" />
+        <input {...register("email", { required: true })} placeholder="Email" />
+        <input
+          {...register("firstName", { required: true })}
+          placeholder="FirstName"
+        />
+        <input
+          {...register("lastName", { required: true })}
+          placeholder="LastName"
+        />
+        <input
+          {...register("userName", { required: true, minLength: 5 })}
+          placeholder="userName"
+        />
+        <input
+          {...register("password", {
+            required: "Password is Required",
+            minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+            },
+          })}
+          placeholder="Password"
+        />
+        <input
+          {...register("password1", { required: true })}
+          placeholder="Password1"
+        />
+        <button>Add</button>
+      </form>
+    </div>
+  );
 }
 
 export default ToDoList;
