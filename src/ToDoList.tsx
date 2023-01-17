@@ -37,11 +37,12 @@ interface IForm {
   userName: string;
   password: string;
   password1: string;
+  extraError?: string;
 }
 const ErrorSpan = styled.span`
-    background-color: #636e72;
-    color:white;
-    // border: 1px solid #e17055;
+  background-color: #636e72;
+  color: white;
+  // border: 1px solid #e17055;
 `;
 
 function ToDoList() {
@@ -49,13 +50,23 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
-        email: "@gmail.com",
-    }
+      email: "@gmail.com",
+    },
   });
-  const onValid = (data: any) => {
+  const onValid = (data: IForm) => {
     console.log(data);
+    if (data.password !== data.password1) {
+      setError(
+        "password1",
+        { message: "Password are not the same" },
+        { shouldFocus: true }
+      );
+    }
+    setError("extraError", { message: "Server Off" });
+    //  특정 항목이 아닌 전체 form에 해당되는 에러이다.
   };
   console.log(errors);
   return (
@@ -74,19 +85,38 @@ function ToDoList() {
             },
           })}
           placeholder="Email"
-        /> <ErrorSpan>{errors?.email?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.email?.message}</ErrorSpan>
         <input
-          {...register("firstName", { required: "Enter your firstname" })}
+          {...register("firstName", {
+            required: "Enter your firstname",
+            validate: (value) =>
+              value.includes("crime") ? "no crime allowed" : true,
+          })}
           placeholder="FirstName"
-        /> <ErrorSpan>{errors?.firstName?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.firstName?.message}</ErrorSpan>
         <input
-          {...register("lastName", { required: "Enter your lastName" })}
+          {...register("lastName", {
+            required: "Enter your lastName",
+            validate: {
+              noCrime: (value) =>
+                value?.includes("crime") ? "no crime allowed" : true,
+              noNick: (value) =>
+                value?.includes("nick") ? "no nick allowed" : true,
+            },
+          })}
           placeholder="LastName"
-        /> <ErrorSpan>{errors?.lastName?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.lastName?.message}</ErrorSpan>
         <input
-          {...register("userName", { required: "Enter your userName", minLength: 5 })}
+          {...register("userName", {
+            required: "Enter your userName",
+            minLength: 5,
+          })}
           placeholder="userName"
-        /> <ErrorSpan>{errors?.userName?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.userName?.message}</ErrorSpan>
         <input
           {...register("password", {
             required: "Password is Required",
@@ -96,12 +126,15 @@ function ToDoList() {
             },
           })}
           placeholder="Password"
-        /> <ErrorSpan>{errors?.password?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.password?.message}</ErrorSpan>
         <input
           {...register("password1", { required: "Please check your password" })}
           placeholder="Password1"
-        /> <ErrorSpan>{errors?.password1?.message}</ErrorSpan>
+        />{" "}
+        <ErrorSpan>{errors?.password1?.message}</ErrorSpan>
         <button>Add</button>
+        <ErrorSpan>{errors?.extraError?.message}</ErrorSpan>
       </form>
     </div>
   );
