@@ -12,9 +12,9 @@ const Ul = styled.ul`
 `;
 function ToDoList() {
   const todos = useRecoilValue(toDoState);
+  console.log(todos);
   /*   const value = useRecoilValue(toDoState); === todos
     const modFn = useSetRecoilState(toDoState);  === setTodos(CreateToDo.tsx)*/
-  console.log(todos);
   return (
     <div>
       <Title>What's Your Plan?</Title>
