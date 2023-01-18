@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "../atoms";
+import { toDoSelector, toDoState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -11,8 +11,8 @@ const Ul = styled.ul`
   color: white;
 `;
 function ToDoList() {
-  const todos = useRecoilValue(toDoState);
-  console.log(todos);
+  const [todo, doing, done] = useRecoilValue(toDoSelector);
+
   /*   const value = useRecoilValue(toDoState); === todos
     const modFn = useSetRecoilState(toDoState);  === setTodos(CreateToDo.tsx)*/
   return (
@@ -20,12 +20,30 @@ function ToDoList() {
       <Title>What's Your Plan?</Title>
       <hr />
       <CreateToDo />
+      <h2>To do</h2>
       <Ul>
-        {todos.map((todo) => (
+        {todo.map((todo) => (
             <ToDo key={todo.id} {...todo}/>
         // 위의 코드와 동일하다. <ToDo text={todo.text} category={todo.category} id={todo.id} />
         ))}
       </Ul>
+      <hr />
+      <h2>Doing</h2>
+      <Ul>
+        {doing.map((todo) => (
+            <ToDo key={todo.id} {...todo}/>
+        // 위의 코드와 동일하다. <ToDo text={todo.text} category={todo.category} id={todo.id} />
+        ))}
+      </Ul>
+      <hr />
+      <h2>Done</h2>
+      <Ul>
+        {done.map((todo) => (
+            <ToDo key={todo.id} {...todo}/>
+        // 위의 코드와 동일하다. <ToDo text={todo.text} category={todo.category} id={todo.id} />
+        ))}
+      </Ul>
+      <hr />
     </div>
   );
 }
