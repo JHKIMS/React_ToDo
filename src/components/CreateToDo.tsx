@@ -13,11 +13,8 @@ function CreateToDo() {
 
   const handleValid = ({ todo }: IForm) => {
     console.log("Add todo", todo);
-    setToDos((oldToDos) => [
-      { text: todo, id: Date.now(), category },
-      ...oldToDos,
-    ]);
     setValue("todo", "");
+    setToDos((current:any) => [{text: todo, category, id:Date.now()}, ...current]);
   };
   return (
     <form onSubmit={handleSubmit(handleValid)}>

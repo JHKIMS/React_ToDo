@@ -1,6 +1,13 @@
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { Categories, categoryState, toDoSelector, toDoState } from "../atoms";
+import {
+  bigCategoryState,
+  Categories,
+  categoryState,
+  toDoSelector,
+  toDoState,
+} from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -13,10 +20,33 @@ const Ul = styled.ul`
 function ToDoList() {
   const todos = useRecoilValue(toDoSelector);
   const [category, setCategory] = useRecoilState(categoryState);
+  const [bigCategory, setBigCategory] = useRecoilState(bigCategoryState);
 
   const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
     setCategory(event.currentTarget.value as unknown as Categories);
   };
+
+  // 큰 카테고리 추가하는 부분.
+  const addBigCategory = () => {
+    const newBigCategory = prompt("New BigCategory", "");
+    if (newBigCategory) {
+      if (bigCategory.includes(newBigCategory)) {
+        alert("Already Exist This BigCategory");
+        return;
+      }
+
+      setBigCategory([...bigCategory, newBigCategory]);
+      setCategory(newBigCategory);
+    }
+  };
+  const onClick = (category: string) => {
+    setCategory(category);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("bigCategory", JSON.stringify(bigCategory));
+  }, [bigCategory]);
+
   console.log(category);
   console.log(todos);
   /*   const value = useRecoilValue(toDoState); === todos
@@ -24,12 +54,40 @@ function ToDoList() {
   return (
     <div>
       <Title>What's Your Plan?</Title>
+      <button onClick={addBigCategory}>+BigCategory</button>
       <hr />
-      <select value={category} onInput={onInput}>
-        <option value={Categories.TO_DO}>TODO</option>
-        <option value={Categories.DOING}>DOING</option>
-        <option value={Categories.DONE}>DONE</option>
+      {/* <select value={category} onChange={onInput}>
+        {bigCategory.map((activeBigCategory)=>(
+          <option key={activeBigCategory} value={activeBigCategory}>
+            <button
+              onClick={() => onClick(activeBigCategory)}
+              disabled={activeBigCategory === category}
+            >
+              {activeBigCategory}
+            </button>
+          </option>
+        ))}
+      </select> */}
+      <select value={category} onChange={onInput}>
+        {bigCategory.map((activeBigCategory) => (
+          <option key={activeBigCategory} value={activeBigCategory}>
+            {activeBigCategory}
+          </option>
+        ))}
       </select>
+
+      <ul>
+        {bigCategory.map((activeBigCategory) => (
+          <li key={activeBigCategory}>
+            <button
+              onClick={() => onClick(activeBigCategory)}
+              disabled={activeBigCategory === category}
+            >
+              {activeBigCategory}
+            </button>
+          </li>
+        ))}
+      </ul>
       <CreateToDo />
       {todos?.map((todo) => (
         <ToDo key={todo.id} {...todo} />
