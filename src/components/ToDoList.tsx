@@ -6,7 +6,6 @@ import {
   Categories,
   categoryState,
   toDoSelector,
-  toDoState,
 } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
@@ -76,9 +75,9 @@ function ToDoList() {
         ))}
       </select>
 
-      <ul>
+      <ul style={{display:'flex'}}>
         {bigCategory.map((activeBigCategory) => (
-          <li key={activeBigCategory}>
+          <li key={activeBigCategory} style={{display:'flex', alignItems:'flex-start',justifyContent:'space-between'}}>
             <button
               onClick={() => onClick(activeBigCategory)}
               disabled={activeBigCategory === category}

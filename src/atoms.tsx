@@ -14,13 +14,18 @@ export interface IToDo {
 export let existCategory: string[] = ["TO_DO", "DOING", "DONE"];
 
 export const toDoState = atom<IToDo[]>({
-  key: "todo",
-  default: [],
+  key: "toDos",
+	default: JSON.parse(localStorage.getItem("toDos") ?? "[]"),
 });
 
 export const categoryState = atom<string>({
     key: "category",
     default: existCategory[0],
+})
+
+export const bigCategoryState = atom<string[]>({
+  key: "bigCategoryState",
+  default: JSON.parse(localStorage.getItem("bigCategory") ?? JSON.stringify(existCategory)),
 })
 
 export const toDoSelector = selector({
@@ -32,7 +37,3 @@ export const toDoSelector = selector({
   },
 });
 
-export const bigCategoryState = atom<string[]>({
-  key: "bigCategoryState",
-  default: JSON.parse(localStorage.getItem("bigCategory") ?? JSON.stringify(existCategory)),
-})

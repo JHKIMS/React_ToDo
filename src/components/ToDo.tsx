@@ -1,8 +1,9 @@
-import { useSetRecoilState } from "recoil";
-import { Categories, IToDo, toDoState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { Categories, IToDo, toDoState, bigCategoryState } from "../atoms";
 
 function ToDo({ text, category, id }: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
+  const bigCategory = useRecoilValue(bigCategoryState);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
@@ -24,24 +25,28 @@ function ToDo({ text, category, id }: IToDo) {
       ];
     });
   };
+
+  const changeCategory = (selectedCategory: string) => {
+		setToDos((oldToDos:any) => {
+			const targetIndex = oldToDos.findIndex((oldToDo:any) => oldToDo.id === id);
+			const newToDo = { text, category: selectedCategory, id };
+
+			return [...oldToDos.slice(0, targetIndex), newToDo, ...oldToDos.slice(targetIndex + 1)];
+		});
+	};
+
   return (
     <li>
       <span>{text}</span>
-      {category !== Categories.DOING && (
-        <button name={Categories.DOING} onClick={onClick}>
-          Doing
+      {Object.values(bigCategory).map((activeCategory) =>(
+        <button
+          disabled={activeCategory === category}
+          key={activeCategory}
+          onClick={() => changeCategory(activeCategory)}>
+            {activeCategory}
         </button>
-      )}
-      {category !== Categories.TO_DO && (
-        <button name={Categories.TO_DO} onClick={onClick}>
-          To Do
-        </button>
-      )}
-      {category !== Categories.DONE && (
-        <button name={Categories.DONE} onClick={onClick}>
-          Done
-        </button>
-      )}
+      ))}
+      
     </li>
   );
 
