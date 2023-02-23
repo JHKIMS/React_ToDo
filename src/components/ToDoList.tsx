@@ -13,8 +13,13 @@ import ToDo from "./ToDo";
 const Title = styled.h1`
   color: white;
 `;
-const Ul = styled.ul`
-  color: white;
+const Wrapper = styled.div`
+	padding: 0 2rem;
+	max-width: 30rem;
+	margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 function ToDoList() {
   const todos = useRecoilValue(toDoSelector);
@@ -51,11 +56,11 @@ function ToDoList() {
   /*   const value = useRecoilValue(toDoState); === todos
     const modFn = useSetRecoilState(toDoState);  === setTodos(CreateToDo.tsx)*/
   return (
-    <div>
-      <Title>What's Your Plan?</Title>
-      <button onClick={addBigCategory}>+BigCategory</button>
-      <hr />
-      {/* <select value={category} onChange={onInput}>
+    <Wrapper>
+      <div>
+        <Title>What's Your Plan?</Title>
+        <button onClick={addBigCategory} style={{marginBottom:'20px'}}>+BigCategory</button>
+        {/* <select value={category} onChange={onInput}>
         {bigCategory.map((activeBigCategory)=>(
           <option key={activeBigCategory} value={activeBigCategory}>
             <button
@@ -67,31 +72,38 @@ function ToDoList() {
           </option>
         ))}
       </select> */}
-      <select value={category} onChange={onInput}>
-        {bigCategory.map((activeBigCategory) => (
-          <option key={activeBigCategory} value={activeBigCategory}>
-            {activeBigCategory}
-          </option>
-        ))}
-      </select>
-
-      <ul style={{display:'flex'}}>
-        {bigCategory.map((activeBigCategory) => (
-          <li key={activeBigCategory} style={{display:'flex', alignItems:'flex-start',justifyContent:'space-between'}}>
-            <button
-              onClick={() => onClick(activeBigCategory)}
-              disabled={activeBigCategory === category}
-            >
+        <select value={category} onChange={onInput}>
+          {bigCategory.map((activeBigCategory) => (
+            <option key={activeBigCategory} value={activeBigCategory}>
               {activeBigCategory}
-            </button>
-          </li>
+            </option>
+          ))}
+        </select>
+
+        <ul style={{ display: "flex" }}>
+          {bigCategory.map((activeBigCategory) => (
+            <li
+              key={activeBigCategory}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+              }}
+            >
+              <button
+                onClick={() => onClick(activeBigCategory)}
+                disabled={activeBigCategory === category}
+              >
+                {activeBigCategory}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <CreateToDo />
+        {todos?.map((todo) => (
+          <ToDo key={todo.id} {...todo} />
         ))}
-      </ul>
-      <CreateToDo />
-      {todos?.map((todo) => (
-        <ToDo key={todo.id} {...todo} />
-      ))}
-      {/* <h2>To do</h2>
+        {/* <h2>To do</h2>
       <Ul>
         {todo.map((todo) => (
             <ToDo key={todo.id} {...todo}/>
@@ -115,7 +127,8 @@ function ToDoList() {
         ))}
       </Ul>
       <hr /> */}
-    </div>
+      </div>
+    </Wrapper>
   );
 }
 

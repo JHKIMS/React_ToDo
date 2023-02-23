@@ -11,7 +11,11 @@ function ToDo({ text, category, id }: IToDo) {
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
       const oldToDo = oldToDos[targetIndex];
-      const newToDo = { text, id, category: name as unknown as IToDo["category"] };
+      const newToDo = {
+        text,
+        id,
+        category: name as unknown as IToDo["category"],
+      };
       console.log(
         "replace the to do in the index",
         targetIndex,
@@ -27,26 +31,34 @@ function ToDo({ text, category, id }: IToDo) {
   };
 
   const changeCategory = (selectedCategory: string) => {
-		setToDos((oldToDos:any) => {
-			const targetIndex = oldToDos.findIndex((oldToDo:any) => oldToDo.id === id);
-			const newToDo = { text, category: selectedCategory, id };
+    setToDos((oldToDos: any) => {
+      const targetIndex = oldToDos.findIndex(
+        (oldToDo: any) => oldToDo.id === id
+      );
+      const newToDo = { text, category: selectedCategory, id };
 
-			return [...oldToDos.slice(0, targetIndex), newToDo, ...oldToDos.slice(targetIndex + 1)];
-		});
-	};
+      return [
+        ...oldToDos.slice(0, targetIndex),
+        newToDo,
+        ...oldToDos.slice(targetIndex + 1),
+      ];
+    });
+  };
 
   return (
-    <li>
+    <li style={{ display: "flex", flexDirection: "column" }}>
       <span>{text}</span>
-      {Object.values(bigCategory).map((activeCategory) =>(
-        <button
-          disabled={activeCategory === category}
-          key={activeCategory}
-          onClick={() => changeCategory(activeCategory)}>
+      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+        {Object.values(bigCategory).map((activeCategory) => (
+          <button
+            disabled={activeCategory === category}
+            key={activeCategory}
+            onClick={() => changeCategory(activeCategory)}
+          >
             {activeCategory}
-        </button>
-      ))}
-      
+          </button>
+        ))}
+      </div>
     </li>
   );
 
